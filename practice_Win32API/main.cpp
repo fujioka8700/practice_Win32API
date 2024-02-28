@@ -14,7 +14,9 @@ int WINAPI WinMain(
 	if (on_button == IDYES) {
 		MessageBox(NULL, TEXT("You are nice!"),
 			TEXT("メッセージボックス"), MB_OK);
-	} else {
+	}
+	
+	if (on_button == IDNO) {
 		MessageBox(NULL, TEXT("Be Killed!"),
 			TEXT("メッセージボックス"), MB_OK);
 	}
