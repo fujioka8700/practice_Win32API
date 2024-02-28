@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <tchar.h>
 
 int WINAPI WinMain(
 	_In_ HINSTANCE hInstance,
@@ -6,20 +7,11 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd) {
 
-	int on_button;
+	TCHAR tchStr[128];
 
-	on_button = MessageBox(NULL, TEXT("Do you like Nekomimi?"),
-		TEXT("質問しています"), MB_YESNO | MB_ICONQUESTION);
+	wsprintf(tchStr, _T("インスタンスハンドル : %d"), 100);
 
-	if (on_button == IDYES) {
-		MessageBox(NULL, TEXT("You are nice!"),
-			TEXT("メッセージボックス"), MB_OK);
-	}
-	
-	if (on_button == IDNO) {
-		MessageBox(NULL, TEXT("Be Killed!"),
-			TEXT("メッセージボックス"), MB_OK);
-	}
+	MessageBox(NULL, tchStr, TEXT("Kitty on your lap"), MB_OK);
 
 	return 0;
 }
