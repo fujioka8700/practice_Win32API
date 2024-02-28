@@ -7,11 +7,12 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd) {
 
-	TCHAR tchStr[128];
+	CONST TCHAR* str1 = _T("Kitty on your lap");
+	TCHAR str2[32];
 
-	wsprintf(tchStr, _T("インスタンスハンドル : %d"), 100);
+	lstrcpy(str2, str1);
 
-	MessageBox(NULL, tchStr, TEXT("Kitty on your lap"), MB_OK);
+	MessageBox(NULL, str2, str2, MB_OK);
 
 	return 0;
 }
