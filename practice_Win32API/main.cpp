@@ -7,11 +7,11 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd) {
 
-	CONST TCHAR* str1 = _T("Kitty on your lap");
-	TCHAR str2[32];
+	TCHAR str1[128] = _T("Kitty on your lap\n");
+	CONST TCHAR* str2 = _T("Tokyo mew mew");
 
-	lstrcpyn(str2, str1, lstrlen(str1) + 1);
-	MessageBox(NULL, str2, str2, MB_OK);
+	lstrcat(str1, str2);
+	MessageBox(NULL, str1, str2, MB_OK);
 
 	return 0;
 }
