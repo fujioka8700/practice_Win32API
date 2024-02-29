@@ -7,7 +7,7 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd) {
 
-	MessageBox(NULL, lpCmdLine, _T("Kitty"), MB_ICONINFORMATION);
+	MessageBox(NULL, GetCommandLine(), _T("Kitty"), MB_ICONINFORMATION);
 
 	return 0;
 }
