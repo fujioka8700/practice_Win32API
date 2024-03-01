@@ -6,9 +6,11 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd) {
 
-	HWND hwnd = CreateWindow(
+	HWND hwnd;
+
+	hwnd = CreateWindowEx(WS_EX_TOOLWINDOW,
 		TEXT("STATIC"), TEXT("Kitty on your lap"),
-		WS_CAPTION,
+		WS_OVERLAPPEDWINDOW,
 		100, 100, 200, 200, NULL, NULL,
 		hInstance, NULL
 	);
