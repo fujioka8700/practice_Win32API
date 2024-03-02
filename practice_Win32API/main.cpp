@@ -1,11 +1,12 @@
 #include <windows.h>
-#include<stdlib.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-	if (msg == WM_LBUTTONUP) {
-		MessageBox(hwnd, TEXT("èIÇÌÇÈÇ…Ç·ÇÒ"),
-			TEXT("Kitty"), MB_ICONINFORMATION);
-		exit(0);
+	switch (msg) {
+		case WM_DESTROY:
+			MessageBox(hwnd, TEXT("èIÇÌÇÈÇ…Ç·ÇÒ"),
+				TEXT("Kitty"), MB_ICONINFORMATION);
+			PostQuitMessage(0);
+			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
@@ -40,9 +41,6 @@ int WINAPI WinMain(
 
 	if (hwnd == NULL) return 0;
 
-	while (TRUE) {
-		GetMessage(&msg, NULL, 0, 0);
-		DispatchMessage(&msg);
-	}
-	return 0;
+	while (GetMessage(&msg, NULL, 0, 0)) DispatchMessage(&msg);
+	return msg.wParam;
 }
