@@ -2,11 +2,12 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	switch (msg) {
-		case WM_DESTROY:
-			MessageBox(hwnd, TEXT("èIÇÌÇÈÇ…Ç·ÇÒ"),
-				TEXT("Kitty"), MB_ICONINFORMATION);
-			PostQuitMessage(0);
-			return 0;
+	case WM_CLOSE:
+		return 0;
+	case WM_RBUTTONUP:
+		DestroyWindow(hwnd);
+		PostQuitMessage(0);
+		return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
