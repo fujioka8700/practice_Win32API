@@ -1,13 +1,20 @@
 #include <windows.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-	switch (msg) {
-	case WM_CLOSE:
-		return 0;
-	case WM_RBUTTONUP:
-		DestroyWindow(hwnd);
-		PostQuitMessage(0);
-		return 0;
+	int nYesNo;
+	LPCREATESTRUCT lpcsWnd;
+
+	switch(msg) {
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		case WM_CREATE:
+			lpcsWnd = (LPCREATESTRUCT)lp;
+
+			nYesNo = MessageBox(hwnd, TEXT("ウィンドウを生成しますか?"),
+				TEXT(lpcsWnd->lpszName), MB_YESNO | MB_ICONQUESTION);
+			if (nYesNo == IDYES) return 0;
+			else return -1;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
@@ -18,8 +25,8 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd) {
 	HWND hwnd;
-	MSG msg;
 	WNDCLASS winc;
+	MSG msg;
 
 	winc.style = CS_HREDRAW | CS_VREDRAW;
 	winc.lpfnWndProc = WndProc;
@@ -43,5 +50,5 @@ int WINAPI WinMain(
 	if (hwnd == NULL) return 0;
 
 	while (GetMessage(&msg, NULL, 0, 0)) DispatchMessage(&msg);
-	return msg.wParam;
+	return (int)msg.wParam;
 }
