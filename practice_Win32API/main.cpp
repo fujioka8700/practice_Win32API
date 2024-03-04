@@ -2,9 +2,10 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	TEXTMETRIC tm;
 	PAINTSTRUCT ps;
-	static LPCTSTR ptStr = TEXT("Kitty on your lap");
+	static RECT rect;
+	static PCTSTR ctStr =
+		TEXT("Government of the people , by the people , for the people");
 
 	switch (msg) {
 		case WM_DESTROY:
@@ -12,16 +13,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-
-			SetTextColor(hdc, 0xFF << 16);
-			TextOut(hdc, 10, 10, ptStr, lstrlen(ptStr));
-
-			SetTextColor(hdc, RGB(255, 0, 0));
-			TextOut(hdc, 10, 50, ptStr, lstrlen(ptStr));
-
+			GetClientRect(hwnd, &rect);
+			DrawText(hdc, ctStr, -1, &rect,
+				DT_CENTER | DT_WORDBREAK);
 			EndPaint(hwnd, &ps);
 			return 0;
-		}
+	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
 
