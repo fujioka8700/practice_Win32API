@@ -3,19 +3,20 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static RECT rect;
-	static PCTSTR ctStr =
-		TEXT("Government of the people , by the people , for the people");
+	LPCTSTR lptStr = TEXT("Kitty on your lap");
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_CREATE:
+			hdc = GetDC(hwnd);
+			SetTextColor(hdc, RGB(0xFF, 0, 0));
+			ReleaseDC(hwnd, hdc);
+			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-			GetClientRect(hwnd, &rect);
-			DrawText(hdc, ctStr, -1, &rect,
-				DT_CENTER | DT_WORDBREAK);
+			TextOut(hdc, 10, 10, lptStr, lstrlen(lptStr));
 			EndPaint(hwnd, &ps);
 			return 0;
 	}
@@ -31,14 +32,14 @@ int WINAPI WinMain(
 	WNDCLASS winc;
 	MSG msg;
 
-	winc.style = CS_HREDRAW | CS_VREDRAW;
-	winc.lpfnWndProc = WndProc;
-	winc.cbClsExtra = winc.cbWndExtra = 0;
-	winc.hInstance = hInstance;
-	winc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	winc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	winc.style         = CS_HREDRAW | CS_VREDRAW;
+	winc.lpfnWndProc   = WndProc;
+	winc.cbClsExtra    = winc.cbWndExtra = 0;
+	winc.hInstance     = hInstance;
+	winc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
+	winc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	winc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	winc.lpszMenuName = NULL;
+	winc.lpszMenuName  = NULL;
 	winc.lpszClassName = TEXT("KITTY");
 
 	if (!RegisterClass(&winc)) return 0;
@@ -52,7 +53,7 @@ int WINAPI WinMain(
 		hInstance, NULL
 	);
 
-	if (hwnd == NULL) return 0;
+	if (hwnd == NULL) return -1;
 
 	while (GetMessage(&msg, NULL, 0, 0)) DispatchMessage(&msg);
 	return (int)msg.wParam;
