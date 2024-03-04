@@ -1,11 +1,19 @@
 #include <windows.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
+	HDC hdc;
+	LPCSTR lptStr = TEXT("Kitty on your lap");
+
 	switch (msg) {
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-		}
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	case WM_LBUTTONDOWN:
+		hdc = GetDC(hwnd);
+		TextOut(hdc, 10, 10, lptStr, lstrlen(lptStr));
+		ReleaseDC(hwnd, hdc);
+		return 0;
+	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
 
