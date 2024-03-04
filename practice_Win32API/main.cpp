@@ -1,21 +1,11 @@
 #include <windows.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-	int nYesNo;
-	LPCREATESTRUCT lpcsWnd;
-
-	switch(msg) {
+	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_CREATE:
-			lpcsWnd = (LPCREATESTRUCT)lp;
-
-			nYesNo = MessageBox(hwnd, TEXT("ウィンドウを生成しますか?"),
-				TEXT(lpcsWnd->lpszName), MB_YESNO | MB_ICONQUESTION);
-			if (nYesNo == IDYES) return 0;
-			else return -1;
-	}
+		}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
 
@@ -43,7 +33,9 @@ int WINAPI WinMain(
 	hwnd = CreateWindow(
 		TEXT("KITTY"), TEXT("Kitty on your lap"),
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		100, 100, 200, 200, NULL, NULL,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		NULL, NULL,
 		hInstance, NULL
 	);
 
