@@ -3,23 +3,25 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	TEXTMETRIC tm;
-	PAINTSTRUCT pt;
-	static LPCTSTR lptStr = TEXT("Kitty on your lap");
+	PAINTSTRUCT ps;
+	static LPCTSTR ptStr = TEXT("Kitty on your lap");
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
 		case WM_PAINT:
-			hdc = BeginPaint(hwnd, &pt);
+			hdc = BeginPaint(hwnd, &ps);
 
-			GetTextMetrics(hdc, &tm);
-			TextOut(hdc, 10, 10, lptStr, lstrlen(lptStr));
-			TextOut(hdc, 10, 10 + tm.tmHeight, lptStr, lstrlen(lptStr));
+			SetTextColor(hdc, 0xFF << 16);
+			TextOut(hdc, 10, 10, ptStr, lstrlen(ptStr));
 
-			EndPaint(hwnd, &pt);
+			SetTextColor(hdc, RGB(255, 0, 0));
+			TextOut(hdc, 10, 50, ptStr, lstrlen(ptStr));
+
+			EndPaint(hwnd, &ps);
 			return 0;
-	}
+		}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
 
