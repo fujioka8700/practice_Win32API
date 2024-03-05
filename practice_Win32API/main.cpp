@@ -1,22 +1,33 @@
 #include <windows.h>
+#define LENGTH 4
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
+	static POINT lpPoint[LENGTH];
+
 	switch (msg) {
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-		case WM_PAINT:
-			hdc = BeginPaint(hWnd, &ps);
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	case WM_CREATE:
+		lpPoint[0].x = 100;
+		lpPoint[0].y = 10;
+		lpPoint[1].x = 130;
+		lpPoint[1].y = 100;
+		lpPoint[2].x = 40;
+		lpPoint[2].y = 100;
+		lpPoint[3].x = lpPoint[3].y = 10;
+		return 0;
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
 
-			MoveToEx(hdc, 10, 10, NULL);
-			LineTo(hdc, 110, 10);
-			LineTo(hdc, 110, 110);
+		MoveToEx(hdc, 10, 10, NULL);
+		PolylineTo(hdc, lpPoint, LENGTH);
 
-			EndPaint(hWnd, &ps);
-			return 0;
+		EndPaint(hWnd, &ps);
+		return 0;
 	}
 	return DefWindowProc(hWnd, msg, wp, lp);
 }
