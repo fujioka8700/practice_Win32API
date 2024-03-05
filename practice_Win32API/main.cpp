@@ -1,35 +1,37 @@
 #include <windows.h>
-#define LENGTH 4
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
-	static POINT lpPoint[LENGTH];
+	static POINT po1[5];
+	static CONST DWORD dw[] = { 3 , 2 };
 
 	switch (msg) {
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-	case WM_CREATE:
-		lpPoint[0].x = 100;
-		lpPoint[0].y = 10;
-		lpPoint[1].x = 130;
-		lpPoint[1].y = 100;
-		lpPoint[2].x = 40;
-		lpPoint[2].y = 100;
-		lpPoint[3].x = lpPoint[3].y = 10;
-		return 0;
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		case WM_CREATE:
+			po1[0].x = 10;
+			po1[0].y = 10;
+			po1[1].x = 100;
+			po1[1].y = 10;
+			po1[2].x = 100;
+			po1[2].y = 100;
 
-		MoveToEx(hdc, 10, 10, NULL);
-		PolylineTo(hdc, lpPoint, LENGTH);
+			po1[3].x = 200;
+			po1[3].y = 10;
+			po1[4].x = 200;
+			po1[4].y = 200;
+		case WM_PAINT:
+			hdc = BeginPaint(hwnd, &ps);
 
-		EndPaint(hWnd, &ps);
-		return 0;
+			PolyPolyline(hdc, po1, dw, 2);
+
+			EndPaint(hwnd, &ps);
+			return 0;
 	}
-	return DefWindowProc(hWnd, msg, wp, lp);
+	return DefWindowProc(hwnd, msg, wp, lp);
 }
 
 int WINAPI WinMain(
