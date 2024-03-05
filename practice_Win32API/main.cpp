@@ -11,10 +11,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			MoveToEx(hdc, 10, 10, NULL);
-			LineTo(hdc, 200, 200);
-			Rectangle(hdc, 30, 30, 180, 180);
-			Ellipse(hdc, 30, 30, 180, 180);
+			RoundRect(hdc, 10, 10, 200, 200, 50, 50);
 
 			EndPaint(hwnd, &ps);
 			return 0;
