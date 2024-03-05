@@ -4,16 +4,27 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
+	static POINT pt[3];
+
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_CREATE:
+			pt[0].x = 100;
+			pt[0].y = 400;
+			pt[1].x = 200;
+			pt[1].y = 400;
+			pt[2].x = 300;
+			pt[2].y = 10;
+			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			Arc(hdc, 10, 10, 200, 200, 0, 100, 110, 0);
-			Pie(hdc, 210, 10, 400, 200, 0, 100, 310, 0);
-			Chord(hdc, 410, 10, 600, 200, 0, 100, 510, 0);
+			MoveToEx(hdc, 0, 10, NULL);
+			PolyBezierTo(hdc, pt, 3);
+			MoveToEx(hdc, 0, 10, NULL);
+			PolylineTo(hdc, pt, 3);
 
 			EndPaint(hwnd, &ps);
 			return 0;
