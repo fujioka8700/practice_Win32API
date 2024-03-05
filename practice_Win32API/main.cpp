@@ -3,8 +3,8 @@
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	TEXTMETRIC tm;
-	LPCTSTR lptStr = TEXT("Kitty on your lap");
+
+	int iCount;
 
 	switch (msg) {
 		case WM_DESTROY:
@@ -12,13 +12,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hWnd, &ps);
-			GetTextMetrics(hdc, &tm);
 
-			SetBkColor(hdc, RGB(0xFF, 0, 0));
-			TextOut(hdc, 10, 10, lptStr, lstrlen(lptStr));
-
-			SetBkMode(hdc, TRANSPARENT);
-			TextOut(hdc, 10, 10 + tm.tmHeight, lptStr, lstrlen(lptStr));
+			for (iCount = 0; iCount < 100; iCount++)
+				SetPixel(hdc, 10 + iCount, 10, 0xFF);
 
 			EndPaint(hWnd, &ps);
 			return 0;
