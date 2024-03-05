@@ -4,8 +4,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
-	int iCount;
-
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
@@ -13,8 +11,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 		case WM_PAINT:
 			hdc = BeginPaint(hWnd, &ps);
 
-			for (iCount = 0; iCount < 100; iCount++)
-				SetPixel(hdc, 10 + iCount, 10, 0xFF);
+			MoveToEx(hdc, 10, 10, NULL);
+			LineTo(hdc, 110, 10);
+			LineTo(hdc, 110, 110);
 
 			EndPaint(hWnd, &ps);
 			return 0;
