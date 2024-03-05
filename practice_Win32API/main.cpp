@@ -4,29 +4,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
-	static POINT po1[5];
-	static CONST DWORD dw[] = { 3 , 2 };
-
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_CREATE:
-			po1[0].x = 10;
-			po1[0].y = 10;
-			po1[1].x = 100;
-			po1[1].y = 10;
-			po1[2].x = 100;
-			po1[2].y = 100;
-
-			po1[3].x = 200;
-			po1[3].y = 10;
-			po1[4].x = 200;
-			po1[4].y = 200;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			PolyPolyline(hdc, po1, dw, 2);
+			MoveToEx(hdc, 10, 10, NULL);
+			LineTo(hdc, 200, 200);
+			Rectangle(hdc, 30, 30, 180, 180);
+			Ellipse(hdc, 30, 30, 180, 180);
 
 			EndPaint(hwnd, &ps);
 			return 0;
