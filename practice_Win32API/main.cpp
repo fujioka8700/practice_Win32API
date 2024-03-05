@@ -2,29 +2,22 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
+	HPEN hpen;
 	PAINTSTRUCT ps;
-
-	static POINT pt[3];
+	LPCTSTR lpctStr = TEXT("Kitty on your lap");
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_CREATE:
-			pt[0].x = 100;
-			pt[0].y = 400;
-			pt[1].x = 200;
-			pt[1].y = 400;
-			pt[2].x = 300;
-			pt[2].y = 10;
-			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			MoveToEx(hdc, 0, 10, NULL);
-			PolyBezierTo(hdc, pt, 3);
-			MoveToEx(hdc, 0, 10, NULL);
-			PolylineTo(hdc, pt, 3);
+			hpen = (HPEN)GetStockObject(WHITE_PEN);
+			SelectObject(hdc, hpen);
+
+			TextOut(hdc, 10, 10, lpctStr, lstrlen(lpctStr));
+			Rectangle(hdc, 20, 20, 200, 50);
 
 			EndPaint(hwnd, &ps);
 			return 0;
