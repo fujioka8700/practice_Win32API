@@ -1,22 +1,10 @@
 #include <windows.h>
 
-#define TITLE TEXT("Kitty on your lap")
-
-BOOL TextOutClr(HDC hdc, int x, int y, LPCTSTR str, COLORREF color) {
-	if (hdc == NULL) return FALSE;
-
-	SaveDC(hdc);
-	SetTextColor(hdc, color);
-	TextOut(hdc, x, y, str, lstrlen(str));
-	RestoreDC(hdc, -1);
-	return TRUE;
-}
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	int iHdcID;
 	TEXTMETRIC tm;
+	LPCTSTR lptStr = TEXT("Kitty on your lap");
 
 	switch (msg) {
 		case WM_DESTROY:
@@ -26,8 +14,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 			hdc = BeginPaint(hWnd, &ps);
 			GetTextMetrics(hdc, &tm);
 
-			TextOutClr(hdc, 0, 0, TITLE, RGB(0xFF, 0, 0));
-			TextOut(hdc, 0, tm.tmHeight, TITLE, lstrlen(TITLE));
+			SetBkColor(hdc, RGB(0xFF, 0, 0));
+			TextOut(hdc, 10, 10, lptStr, lstrlen(lptStr));
+
+			SetBkMode(hdc, TRANSPARENT);
+			TextOut(hdc, 10, 10 + tm.tmHeight, lptStr, lstrlen(lptStr));
 
 			EndPaint(hWnd, &ps);
 			return 0;
@@ -66,10 +57,7 @@ int WINAPI WinMain(
 
 	if (hwnd == NULL) return -1;
 
-	while (GetMessage(&msg, NULL, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+	while (GetMessage(&msg, NULL, 0, 0)) DispatchMessage(&msg);
 
 	return (int)msg.wParam;
 }
