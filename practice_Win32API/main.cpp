@@ -11,7 +11,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			RoundRect(hdc, 10, 10, 200, 200, 50, 50);
+			Arc(hdc, 10, 10, 200, 200, 0, 100, 110, 0);
+			Pie(hdc, 210, 10, 400, 200, 0, 100, 310, 0);
+			Chord(hdc, 410, 10, 600, 200, 0, 100, 510, 0);
 
 			EndPaint(hwnd, &ps);
 			return 0;
