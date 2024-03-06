@@ -2,22 +2,26 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	HPEN hpen;
+	static LOGPEN lopnPen;
 	PAINTSTRUCT ps;
 
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
+	case WM_CREATE:
+		lopnPen.lopnStyle = PS_SOLID;
+		lopnPen.lopnWidth.x = 5;
+		lopnPen.lopnColor = 0XFF;
+		return 0;
 	case WM_PAINT:
 		hdc = BeginPaint(hwnd, &ps);
-		hpen = CreatePen(PS_DASH, 0, 0XFF << 16);
 
-		SelectObject(hdc, hpen);
-		Rectangle(hdc, 10, 10, 200, 50);
+		SelectObject(hdc, CreatePenIndirect(&lopnPen));
+		Ellipse(hdc, 10, 10, 200, 50);
 
+		DeleteObject(SelectObject(hdc, GetStockObject(WHITE_BRUSH)));
 		EndPaint(hwnd, &ps);
-		DeleteObject(hpen);
 		return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
