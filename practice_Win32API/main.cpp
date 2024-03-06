@@ -4,23 +4,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	HPEN hpen;
 	PAINTSTRUCT ps;
-	LPCTSTR lpctStr = TEXT("Kitty on your lap");
 
 	switch (msg) {
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-		case WM_PAINT:
-			hdc = BeginPaint(hwnd, &ps);
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	case WM_PAINT:
+		hdc = BeginPaint(hwnd, &ps);
+		hpen = CreatePen(PS_DASH, 0, 0XFF << 16);
 
-			hpen = (HPEN)GetStockObject(WHITE_PEN);
-			SelectObject(hdc, hpen);
+		SelectObject(hdc, hpen);
+		Rectangle(hdc, 10, 10, 200, 50);
 
-			TextOut(hdc, 10, 10, lpctStr, lstrlen(lpctStr));
-			Rectangle(hdc, 20, 20, 200, 50);
-
-			EndPaint(hwnd, &ps);
-			return 0;
+		EndPaint(hwnd, &ps);
+		DeleteObject(hpen);
+		return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
@@ -34,14 +32,14 @@ int WINAPI WinMain(
 	WNDCLASS winc;
 	MSG msg;
 
-	winc.style         = CS_HREDRAW | CS_VREDRAW;
-	winc.lpfnWndProc   = WndProc;
-	winc.cbClsExtra    = winc.cbWndExtra = 0;
-	winc.hInstance     = hInstance;
-	winc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
-	winc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+	winc.style = CS_HREDRAW | CS_VREDRAW;
+	winc.lpfnWndProc = WndProc;
+	winc.cbClsExtra = winc.cbWndExtra = 0;
+	winc.hInstance = hInstance;
+	winc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	winc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	winc.lpszMenuName  = NULL;
+	winc.lpszMenuName = NULL;
 	winc.lpszClassName = TEXT("KITTY");
 
 	if (!RegisterClass(&winc)) return 0;
