@@ -4,18 +4,40 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
+	static POINT po[8];
+	static INT imode;
+
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_CREATE:
+			po[0].x = 10;	po[0].y = 50;
+			po[1].x = 150;	po[1].y = 50;
+			po[2].x = 150;	po[2].y = 150;
+			po[3].x = 50;	po[3].y = 150;
+			po[4].x = 50;	po[4].y = 10;
+			po[5].x = 200;	po[5].y = 10;
+			po[6].x = 200;	po[6].y = 125;
+			po[7].x = 10;	po[7].y = 125;
+
+			imode = MessageBox(
+				NULL, TEXT("多角形モードを変更しますか?"),
+				TEXT("SetPolyFillMode"), MB_YESNO
+			);
+			if (imode == IDYES) imode = WINDING;
+			else imode = ALTERNATE;
+
+			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			SetROP2(hdc, R2_XORPEN);
-			Rectangle(hdc, 10, 10, 200, 50);
-			Ellipse(hdc, 100, 25, 300, 100);
+			SelectObject(hdc, CreateSolidBrush(0xFF));
+			SetPolyFillMode(hdc, imode);
+			Polygon(hdc, po, 8);
 
 			EndPaint(hwnd, &ps);
+			DeleteObject(SelectObject(hdc, GetStockObject(WHITE_BRUSH)));
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
