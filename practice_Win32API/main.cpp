@@ -11,12 +11,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			SelectObject(hdc, CreateHatchBrush(HS_CROSS, 0XFF << 16));
+			SetROP2(hdc, R2_XORPEN);
 			Rectangle(hdc, 10, 10, 200, 50);
-			DeleteObject(SelectObject(hdc, CreateHatchBrush(HS_DIAGCROSS, 0xFF)));
-
 			Ellipse(hdc, 100, 25, 300, 100);
-			DeleteObject(SelectObject(hdc, GetStockObject(WHITE_BRUSH)));
 
 			EndPaint(hwnd, &ps);
 			return 0;
