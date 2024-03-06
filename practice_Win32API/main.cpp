@@ -5,17 +5,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	PAINTSTRUCT ps;
 
 	switch (msg) {
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-	case WM_PAINT:
-		hdc = BeginPaint(hwnd, &ps);
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		case WM_PAINT:
+			hdc = BeginPaint(hwnd, &ps);
 
-		SelectObject(hdc, GetStockObject(GRAY_BRUSH));
-		Rectangle(hdc, 10, 10, 200, 50);
+			SelectObject(hdc, CreateSolidBrush(0XFF << 16));
+			Rectangle(hdc, 10, 10, 200, 50);
+			DeleteObject(SelectObject(hdc, CreateSolidBrush(0xFF)));
 
-		EndPaint(hwnd, &ps);
-		return 0;
+			Ellipse(hdc, 100, 25, 300, 100);
+			DeleteObject(SelectObject(hdc, GetStockObject(WHITE_BRUSH)));
+
+			EndPaint(hwnd, &ps);
+			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
@@ -35,7 +39,7 @@ int WINAPI WinMain(
 	winc.hInstance = hInstance;
 	winc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	winc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	winc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	winc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	winc.lpszMenuName = NULL;
 	winc.lpszClassName = TEXT("KITTY");
 
