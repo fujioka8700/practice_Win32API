@@ -2,13 +2,17 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
+	PAINTSTRUCT ps;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_SYSKEYDOWN:
-			MessageBox(NULL, TEXT("Kitty on your lap"), TEXT("Key Event"), MB_OK);
+		case WM_CHAR:
+			hdc = GetDC(hwnd);
+			TextOut(hdc, 10, 10, TEXT("    "), 4);
+			TextOut(hdc, 10, 10, (PTSTR)&wp, 1);
+			ReleaseDC(hwnd, hdc);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
@@ -45,7 +49,10 @@ int WINAPI WinMain(
 
 	if (hwnd == NULL) return -1;
 
-	while (GetMessage(&msg, NULL, 0, 0)) DispatchMessage(&msg);
+	while (GetMessage(&msg, NULL, 0, 0)) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 
 	return (int)msg.wParam;
 }
