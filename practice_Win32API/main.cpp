@@ -7,14 +7,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_KEYUP:
-			if (wp == VK_SHIFT) return 0;
+		case WM_SETFOCUS:
+			hdc = GetDC(hwnd);
 
-			if (GetKeyState(VK_SHIFT) < 0)
-				MessageBox(hwnd, TEXT("シフトを押した状態です"), TEXT("Kitty"), MB_OK);
-			else
-				MessageBox(hwnd, TEXT("シフトは押されていません"), TEXT("Kitty"), MB_OK);
+			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
+			Rectangle(hdc, 10, 10, 100, 100);
 
+			ReleaseDC(hwnd, hdc);
+			return 0;
+		case WM_KILLFOCUS:
+			hdc = GetDC(hwnd);
+
+			Ellipse(hdc, 10, 10, 100, 100);
+
+			ReleaseDC(hwnd, hdc);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
