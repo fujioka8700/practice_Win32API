@@ -2,29 +2,13 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	static int iWidth = 10;
-	int iCount;
-	TCHAR tcRe[4];
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_KEYDOWN:
-			hdc = GetDC(hwnd);
-			iWidth++;
-
-			SelectObject(hdc, GetStockObject(WHITE_PEN));
-			Rectangle(hdc, 0, 0, 400, 400);
-
-			wsprintf(tcRe, "%d", (short)lp);
-			TextOut(hdc, 10, 150, tcRe, lstrlen(tcRe));
-
-			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
-
-			for (iCount = 0; iCount < 10000; iCount++)
-				Rectangle(hdc, 10, 10, iWidth, 100);
-			ReleaseDC(hwnd, hdc);
+		case WM_SYSKEYDOWN:
+			MessageBox(NULL, TEXT("Kitty on your lap"), TEXT("Key Event"), MB_OK);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
