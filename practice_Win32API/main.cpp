@@ -2,17 +2,19 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	PAINTSTRUCT ps;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_CHAR:
-			hdc = GetDC(hwnd);
-			TextOut(hdc, 10, 10, TEXT("    "), 4);
-			TextOut(hdc, 10, 10, (PTSTR)&wp, 1);
-			ReleaseDC(hwnd, hdc);
+		case WM_KEYUP:
+			if (wp == VK_SHIFT) return 0;
+
+			if (GetKeyState(VK_SHIFT) < 0)
+				MessageBox(hwnd, TEXT("シフトを押した状態です"), TEXT("Kitty"), MB_OK);
+			else
+				MessageBox(hwnd, TEXT("シフトは押されていません"), TEXT("Kitty"), MB_OK);
+
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
