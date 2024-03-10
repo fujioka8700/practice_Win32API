@@ -3,26 +3,23 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	HRGN hrgn;
-	static POINT pt[3];
+	static int iCount = 0;
+	static TCHAR strCount[8];
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_CREATE:
-			pt[0].x = 10; pt[0].y = 10;
-			pt[1].x = 100; pt[1].y = 10;
-			pt[2].x = 30; pt[2].y = 100;
+		case WM_KEYDOWN:
+			iCount++;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-			SelectObject(hdc, GetStockObject(GRAY_BRUSH));
 
-			hrgn = CreatePolygonRgn(pt, 3, ALTERNATE);
-			PaintRgn(hdc, hrgn);
+			wsprintf(strCount, "%d", iCount);
+			TextOut(hdc, 10, 30, strCount, lstrlen(strCount));
 
-			DeleteObject(hrgn);
 			EndPaint(hwnd, &ps);
 			return 0;
 	}
@@ -61,7 +58,7 @@ int WINAPI WinMain(
 	if (hwnd == NULL) return -1;
 
 	while (GetMessage(&msg, NULL, 0, 0)) {
-		TranslateMessage(&msg);
+		// TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
 
