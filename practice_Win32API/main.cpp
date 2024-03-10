@@ -13,7 +13,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			hdc = BeginPaint(hwnd, &ps);
 			SelectObject(hdc, GetStockObject(GRAY_BRUSH));
 
-			hrgn = CreateEllipticRgn(10, 10, 200, 200);
+			hrgn = CreateRoundRectRgn(10, 10, 200, 100, 50, 20);
 			PaintRgn(hdc, hrgn);
 
 			DeleteObject(hrgn);
