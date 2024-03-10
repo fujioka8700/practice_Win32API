@@ -2,25 +2,21 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
+	PAINTSTRUCT ps;
+	HRGN hrgn;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_SETFOCUS:
-			hdc = GetDC(hwnd);
+		case WM_PAINT:
+			hdc = BeginPaint(hwnd, &ps);
 
-			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
-			Rectangle(hdc, 10, 10, 100, 100);
+			hrgn = CreateRectRgn(10, 10, 100, 100);
+			FillRgn(hdc, hrgn, (HBRUSH)GetStockObject(BLACK_BRUSH));
+			DeleteObject(hrgn);
 
-			ReleaseDC(hwnd, hdc);
-			return 0;
-		case WM_KILLFOCUS:
-			hdc = GetDC(hwnd);
-
-			Ellipse(hdc, 10, 10, 100, 100);
-
-			ReleaseDC(hwnd, hdc);
+			EndPaint(hwnd, &ps);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
