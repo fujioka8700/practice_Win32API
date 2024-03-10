@@ -11,11 +11,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
+			SelectObject(hdc, GetStockObject(GRAY_BRUSH));
 
-			hrgn = CreateRectRgn(10, 10, 100, 100);
-			FillRgn(hdc, hrgn, (HBRUSH)GetStockObject(BLACK_BRUSH));
+			hrgn = CreateEllipticRgn(10, 10, 200, 200);
+			PaintRgn(hdc, hrgn);
+
 			DeleteObject(hrgn);
-
 			EndPaint(hwnd, &ps);
 			return 0;
 	}
