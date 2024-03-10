@@ -4,16 +4,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 	HRGN hrgn;
+	static POINT pt[3];
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_CREATE:
+			pt[0].x = 10; pt[0].y = 10;
+			pt[1].x = 100; pt[1].y = 10;
+			pt[2].x = 30; pt[2].y = 100;
+			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 			SelectObject(hdc, GetStockObject(GRAY_BRUSH));
 
-			hrgn = CreateRoundRectRgn(10, 10, 200, 100, 50, 20);
+			hrgn = CreatePolygonRgn(pt, 3, ALTERNATE);
 			PaintRgn(hdc, hrgn);
 
 			DeleteObject(hrgn);
