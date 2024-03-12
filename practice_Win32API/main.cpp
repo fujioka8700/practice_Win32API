@@ -2,17 +2,23 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	static CONST LPCTSTR lpstr = TEXT("Kitty on your lap");
+	PAINTSTRUCT ps;
+	HRGN hrgn[2];
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
 		case WM_PAINT:
-			ValidateRect(hwnd, NULL);
-			hdc = GetDC(hwnd);
-			TextOut(hdc, 10, 10, lpstr, lstrlen(lpstr));
-			ReleaseDC(hwnd, hdc);
+			hdc = BeginPaint(hwnd, &ps);
+
+			hrgn[0] = CreateRectRgn(10, 10, 200, 100);
+			hrgn[1] = CreateEllipticRgn(100, 10, 300, 200);
+			CombineRgn(hrgn[0], hrgn[0], hrgn[1], RGN_XOR);
+			FillRgn(hdc, hrgn[0], (HBRUSH)GetStockObject(BLACK_BRUSH));
+
+			DeleteObject(hrgn[0]); DeleteObject(hrgn[1]);
+			EndPaint(hwnd, &ps);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
