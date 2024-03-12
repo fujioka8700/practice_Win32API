@@ -3,29 +3,33 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static int iCount = 0;
-	static TCHAR strCount[8];
 	HRGN hrgn;
 
 	switch (msg) {
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-	case WM_KEYDOWN:
-		hrgn = CreateRectRgn(0, 0, 100, 40);
-		InvalidateRgn(hwnd, hrgn, TRUE);
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		case WM_KEYDOWN:
+			hdc = GetDC(hwnd);
+			hrgn = CreateEllipticRgn(50, 10, 200, 150);
 
-		iCount++;
-		
-		return 0;
-	case WM_PAINT:
-		hdc = BeginPaint(hwnd, &ps);
+			SelectObject(hdc, GetStockObject(WHITE_PEN));
+			Rectangle(hdc, 10, 10, 400, 200);
+			
+			InvalidateRect(hwnd, NULL, TRUE);
+			ValidateRgn(hwnd, hrgn);
 
-		wsprintf(strCount, "%d", iCount);
-		TextOut(hdc, 10, 30, strCount, lstrlen(strCount));
+			DeleteObject(hrgn);
+			ReleaseDC(hwnd, hdc);
+			return 0;
+		case WM_PAINT:
+			hdc = BeginPaint(hwnd, &ps);
 
-		EndPaint(hwnd, &ps);
-		return 0;
+			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
+			Rectangle(hdc, 10, 10, 400, 200);
+
+			EndPaint(hwnd, &ps);
+			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
