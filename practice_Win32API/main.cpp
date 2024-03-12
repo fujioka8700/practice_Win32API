@@ -2,7 +2,6 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	PAINTSTRUCT ps;
 	static CONST LPCTSTR lpstr = TEXT("Kitty on your lap");
 
 	switch (msg) {
@@ -11,17 +10,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			return 0;
 		case WM_PAINT:
 			ValidateRect(hwnd, NULL);
-
 			hdc = GetDC(hwnd);
-
 			TextOut(hdc, 10, 10, lpstr, lstrlen(lpstr));
-
-			hdc = BeginPaint(hwnd, &ps);
-
-			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
-			Rectangle(hdc, 10, 100, 400, 200);
-
-			EndPaint(hwnd, &ps);
 			ReleaseDC(hwnd, hdc);
 			return 0;
 	}
