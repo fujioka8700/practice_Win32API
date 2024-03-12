@@ -3,7 +3,8 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	HRGN hrgn[2];
+	TEXTMETRIC tm;
+	TCHAR str[64];
 
 	switch (msg) {
 		case WM_DESTROY:
@@ -12,12 +13,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			hrgn[0] = CreateRectRgn(10, 10, 200, 100);
-			hrgn[1] = CreateEllipticRgn(100, 10, 300, 200);
-			CombineRgn(hrgn[0], hrgn[0], hrgn[1], RGN_XOR);
-			FillRgn(hdc, hrgn[0], (HBRUSH)GetStockObject(BLACK_BRUSH));
+			GetTextMetrics(hdc, &tm);
+			wsprintf(str, "â°ïù %d px", GetDeviceCaps(hdc, HORZRES));
+			TextOut(hdc, 10, 10, str, lstrlen(str));
+			wsprintf(str, "çÇÇ≥ %d px", GetDeviceCaps(hdc, VERTRES));
+			TextOut(hdc, 10, 10 + tm.tmHeight, str, lstrlen(str));
 
-			DeleteObject(hrgn[0]); DeleteObject(hrgn[1]);
 			EndPaint(hwnd, &ps);
 			return 0;
 	}
