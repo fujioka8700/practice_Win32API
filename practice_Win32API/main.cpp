@@ -3,8 +3,8 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	TEXTMETRIC tm;
-	TCHAR str[64];
+	TCHAR str[128];
+	RECT rect;
 
 	switch (msg) {
 		case WM_DESTROY:
@@ -13,11 +13,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
-			GetTextMetrics(hdc, &tm);
-			wsprintf(str, "横幅 %d px", GetDeviceCaps(hdc, HORZRES));
-			TextOut(hdc, 10, 10, str, lstrlen(str));
-			wsprintf(str, "高さ %d px", GetDeviceCaps(hdc, VERTRES));
-			TextOut(hdc, 10, 10 + tm.tmHeight, str, lstrlen(str));
+			GetClientRect(hwnd, &rect);
+			wsprintf(str, "マウスボタンの数 : %d\nカーソルの横幅 : %d\nカーソルの縦幅 : %d",
+				GetSystemMetrics(SM_CMOUSEBUTTONS),
+				GetSystemMetrics(SM_CXCURSOR),
+				GetSystemMetrics(SM_CYCURSOR)
+			);
+
+			DrawText(hdc, str, -1, &rect, DT_LEFT);
 
 			EndPaint(hwnd, &ps);
 			return 0;
