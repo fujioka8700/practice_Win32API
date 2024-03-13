@@ -3,23 +3,21 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static unsigned short int x = -10, y = -10;
+	static LPCTSTR pctKitty = TEXT("Kitty on your lap");
+	static unsigned short int x = 0, y = 0;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_MOUSEMOVE:
-			if (wp & MK_LBUTTON) {
-				x = LOWORD(lp);
-				y = HIWORD(lp);
-				InvalidateRect(hwnd, NULL, FALSE);
-			}
+		case WM_LBUTTONDBLCLK:
+			x = LOWORD(lp);
+			y = HIWORD(lp);
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
-			Ellipse(hdc, x - 2, y - 2, x + 2, y + 2);
+			TextOut(hdc, x, y, pctKitty, lstrlen(pctKitty));
 			EndPaint(hwnd, &ps);
 			return 0;
 	}
@@ -35,7 +33,7 @@ int WINAPI WinMain(
 	WNDCLASS winc;
 	MSG msg;
 
-	winc.style = CS_HREDRAW | CS_VREDRAW;
+	winc.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 	winc.lpfnWndProc = WndProc;
 	winc.cbClsExtra = winc.cbWndExtra = 0;
 	winc.hInstance = hInstance;
