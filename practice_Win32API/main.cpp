@@ -3,21 +3,26 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static LPCTSTR pctKitty = TEXT("Kitty on your lap");
+	RECT rect;
+	static TCHAR strLocation[128];
 	static unsigned short int x = 0, y = 0;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_LBUTTONDBLCLK:
+		case WM_NCLBUTTONDOWN:
 			x = LOWORD(lp);
 			y = HIWORD(lp);
+			wsprintf(strLocation, "xç¿ïW = %d\nyç¿ïW = %d\nHITTEST = %d", x, y, wp);
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-			TextOut(hdc, x, y, pctKitty, lstrlen(pctKitty));
+
+			GetClientRect(hwnd, &rect);
+			DrawText(hdc, strLocation, -1, &rect, DT_LEFT);
+
 			EndPaint(hwnd, &ps);
 			return 0;
 	}
@@ -33,7 +38,7 @@ int WINAPI WinMain(
 	WNDCLASS winc;
 	MSG msg;
 
-	winc.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	winc.style = CS_HREDRAW | CS_VREDRAW;
 	winc.lpfnWndProc = WndProc;
 	winc.cbClsExtra = winc.cbWndExtra = 0;
 	winc.hInstance = hInstance;
@@ -49,7 +54,7 @@ int WINAPI WinMain(
 		TEXT("KITTY"), TEXT("Kitty on your lap"),
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT,
+		400, 200,
 		NULL, NULL, hInstance, NULL
 	);
 
