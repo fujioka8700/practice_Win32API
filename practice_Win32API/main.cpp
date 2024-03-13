@@ -3,35 +3,21 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	RECT rect;
-	static TCHAR* strVer, strText[256];
-	static OSVERSIONINFO osInfo;
+	static LPCTSTR pctKitty = TEXT("Kitty on your lap");
+	static unsigned short int x = 0, y = 0;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
-			return 0;
-		case WM_CREATE:
-			osInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-			GetVersionEx(&osInfo);
-			if (osInfo.dwPlatformId == VER_PLATFORM_WIN32s)
-				strVer = TEXT("3.1");
-			else if (osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS) {
-				if (osInfo.dwMinorVersion)
-					strVer = TEXT("98");
-				else strVer = TEXT("95");
-			}
-			else strVer = TEXT("NT");
-
-			wsprintf(strText, TEXT("OS = Windows %s\nVersion = %d.%d"),
-				strVer, osInfo.dwMajorVersion, osInfo.dwMinorVersion);
+			return 1;
+		case WM_LBUTTONDOWN:
+			x = LOWORD(lp);
+			y = HIWORD(lp);
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-
-			GetClientRect(hwnd, &rect);
-			DrawText(hdc, strText, -1, &rect, DT_LEFT);
-
+			TextOut(hdc, x, y, pctKitty, lstrlen(pctKitty));
 			EndPaint(hwnd, &ps);
 			return 0;
 	}
