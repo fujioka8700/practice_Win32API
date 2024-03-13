@@ -3,24 +3,34 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	TCHAR str[128];
 	RECT rect;
+	static TCHAR* strVer, strText[256];
+	static OSVERSIONINFO osInfo;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_CREATE:
+			osInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+			GetVersionEx(&osInfo);
+			if (osInfo.dwPlatformId == VER_PLATFORM_WIN32s)
+				strVer = TEXT("3.1");
+			else if (osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS) {
+				if (osInfo.dwMinorVersion)
+					strVer = TEXT("98");
+				else strVer = TEXT("95");
+			}
+			else strVer = TEXT("NT");
+
+			wsprintf(strText, TEXT("OS = Windows %s\nVersion = %d.%d"),
+				strVer, osInfo.dwMajorVersion, osInfo.dwMinorVersion);
+			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
 			GetClientRect(hwnd, &rect);
-			wsprintf(str, "マウスボタンの数 : %d\nカーソルの横幅 : %d\nカーソルの縦幅 : %d",
-				GetSystemMetrics(SM_CMOUSEBUTTONS),
-				GetSystemMetrics(SM_CXCURSOR),
-				GetSystemMetrics(SM_CYCURSOR)
-			);
-
-			DrawText(hdc, str, -1, &rect, DT_LEFT);
+			DrawText(hdc, strText, -1, &rect, DT_LEFT);
 
 			EndPaint(hwnd, &ps);
 			return 0;
