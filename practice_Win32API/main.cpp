@@ -1,37 +1,23 @@
 #include <windows.h>
 
+unsigned int lCount;
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static RECT rct;
-	static BOOL blMouse = FALSE;
+	static TCHAR strCount[64];
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_LBUTTONDOWN:
-			blMouse = TRUE;
-			rct.left = LOWORD(lp);
-			rct.top = HIWORD(lp);
-			SetCapture(hwnd);
-			return 0;
-		case WM_LBUTTONUP:
-			blMouse = FALSE;
-			ReleaseCapture();
-			return 0;
-		case WM_MOUSEMOVE:
-			if (blMouse) {
-				rct.right = LOWORD(lp);
-				rct.bottom = HIWORD(lp);
-				InvalidateRect(hwnd, NULL, TRUE);
-			}
-			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-			Rectangle(hdc, rct.left, rct.top, rct.right, rct.bottom);
+
+			wsprintf(strCount, "%d", lCount);
+			TextOut(hdc, 10, 10, strCount, lstrlen(strCount));
+
 			EndPaint(hwnd, &ps);
-			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
@@ -67,9 +53,15 @@ int WINAPI WinMain(
 
 	if (hwnd == NULL) return -1;
 
-	while (GetMessage(&msg, NULL, 0, 0)) {
-		// TranslateMessage(&msg);
-		DispatchMessage(&msg);
+	while (TRUE) {
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			if (msg.message == WM_QUIT) break;
+			DispatchMessage(&msg);
+		}
+		else {
+			lCount++;
+			InvalidateRect(hwnd, NULL, FALSE);
+		}
 	}
 
 	return (int)msg.wParam;
