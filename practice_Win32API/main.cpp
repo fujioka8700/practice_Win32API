@@ -2,16 +2,33 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
+	PAINTSTRUCT ps;
+	static RECT rct;
+	static BOOL blMouse = FALSE;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
 		case WM_LBUTTONDOWN:
-			ShowCursor(TRUE);
+			blMouse = TRUE;
+			rct.left = LOWORD(lp);
+			rct.top = HIWORD(lp);
 			return 0;
-		case WM_CREATE:
-			ShowCursor(FALSE);
+		case WM_LBUTTONUP:
+			blMouse = FALSE;
+			return 0;
+		case WM_MOUSEMOVE:
+			if (blMouse) {
+				rct.right = LOWORD(lp);
+				rct.bottom = HIWORD(lp);
+				InvalidateRect(hwnd, NULL, TRUE);
+			}
+			return 0;
+		case WM_PAINT:
+			hdc = BeginPaint(hwnd, &ps);
+			Rectangle(hdc, rct.left, rct.top, rct.right, rct.bottom);
+			EndPaint(hwnd, &ps);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
