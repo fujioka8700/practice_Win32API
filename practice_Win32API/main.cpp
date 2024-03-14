@@ -5,7 +5,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	PAINTSTRUCT ps;
 	RECT rect;
 	static TCHAR strLocation[128];
-	static unsigned short int x = 0, y = 0;
+	static unsigned int x = 0, y = 0;
 
 	switch (msg) {
 		case WM_DESTROY:
