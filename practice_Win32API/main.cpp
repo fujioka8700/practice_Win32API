@@ -14,9 +14,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			blMouse = TRUE;
 			rct.left = LOWORD(lp);
 			rct.top = HIWORD(lp);
+			SetCapture(hwnd);
 			return 0;
 		case WM_LBUTTONUP:
 			blMouse = FALSE;
+			ReleaseCapture();
 			return 0;
 		case WM_MOUSEMOVE:
 			if (blMouse) {
