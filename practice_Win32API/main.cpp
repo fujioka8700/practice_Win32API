@@ -3,20 +3,20 @@
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	RECT rect;
 	static TCHAR strLocation[128];
-	static unsigned int x = 0, y = 0;
+	static unsigned short int x = 0, y = 0;
+	RECT rect;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_NCLBUTTONDOWN:
+		case WM_NCHITTEST:
 			x = LOWORD(lp);
 			y = HIWORD(lp);
-			wsprintf(strLocation, "x座標 = %d\ny座標 = %d\nHITTEST = %d", x, y, wp);
+			wsprintf(strLocation, "x座標 = %d\ny座標 = %d", x, y);
 			InvalidateRect(hwnd, NULL, TRUE);
-			return 0;
+			return HTNOWHERE;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
 
@@ -54,7 +54,7 @@ int WINAPI WinMain(
 		TEXT("KITTY"), TEXT("Kitty on your lap"),
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		400, 200,
+		CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, NULL, hInstance, NULL
 	);
 
