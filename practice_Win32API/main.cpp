@@ -2,19 +2,16 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	POINT po;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_KEYDOWN:
-			GetCursorPos(&po);
-			if (wp == VK_UP)	po.y--;
-			if (wp == VK_DOWN)	po.y++;
-			if (wp == VK_LEFT)	po.x--;
-			if (wp == VK_RIGHT)	po.x++;
-			SetCursorPos(po.x, po.y);
+		case WM_LBUTTONDOWN:
+			ShowCursor(TRUE);
+			return 0;
+		case WM_CREATE:
+			ShowCursor(FALSE);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
