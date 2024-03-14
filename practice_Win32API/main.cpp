@@ -2,28 +2,19 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
-	PAINTSTRUCT ps;
-	static TCHAR strLocation[128];
-	static unsigned short int x = 0, y = 0;
-	RECT rect;
+	POINT po;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_NCHITTEST:
-			x = LOWORD(lp);
-			y = HIWORD(lp);
-			wsprintf(strLocation, "xç¿ïW = %d\nyç¿ïW = %d", x, y);
-			InvalidateRect(hwnd, NULL, TRUE);
-			return HTNOWHERE;
-		case WM_PAINT:
-			hdc = BeginPaint(hwnd, &ps);
-
-			GetClientRect(hwnd, &rect);
-			DrawText(hdc, strLocation, -1, &rect, DT_LEFT);
-
-			EndPaint(hwnd, &ps);
+		case WM_KEYDOWN:
+			GetCursorPos(&po);
+			if (wp == VK_UP)	po.y--;
+			if (wp == VK_DOWN)	po.y++;
+			if (wp == VK_LEFT)	po.x--;
+			if (wp == VK_RIGHT)	po.x++;
+			SetCursorPos(po.x, po.y);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
