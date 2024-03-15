@@ -5,19 +5,34 @@ unsigned int lCount;
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static TCHAR strCount[64];
+	RECT rctDimension;
+
+	static BOOL blRight = TRUE;
+	static int x = 0;
 
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_CREATE:
+			SetTimer(hwnd, 1, 1, NULL);
+			return 0;
+		case WM_TIMER:
+			GetClientRect(hwnd, &rctDimension);
+			if (x + 100 >= rctDimension.right) blRight = FALSE;
+			else if (x <= 0) blRight = TRUE;
+
+			if (blRight) x++;
+			else x--;
+
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
 		case WM_PAINT:
 			hdc = BeginPaint(hwnd, &ps);
-
-			wsprintf(strCount, "%d", lCount);
-			TextOut(hdc, 10, 10, strCount, lstrlen(strCount));
-
+			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
+			Ellipse(hdc, x, 50, x + 100, 150);
 			EndPaint(hwnd, &ps);
+			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
@@ -53,16 +68,7 @@ int WINAPI WinMain(
 
 	if (hwnd == NULL) return -1;
 
-	while (TRUE) {
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			if (msg.message == WM_QUIT) break;
-			DispatchMessage(&msg);
-		}
-		else {
-			lCount++;
-			InvalidateRect(hwnd, NULL, FALSE);
-		}
-	}
+	while (GetMessage(&msg, NULL, 0, 0)) DispatchMessage(&msg);
 
 	return (int)msg.wParam;
 }
