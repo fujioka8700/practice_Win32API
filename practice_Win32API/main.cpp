@@ -1,28 +1,43 @@
 #include <windows.h>
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-	HDC hdc;
-	PAINTSTRUCT ps;
-	static int iCount = 0;
-	static TCHAR strCount[64];
+#define TM_COUNT1 1
+#define TM_COUNT2 2
 
-	switch (msg) {
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-		case WM_CREATE:
-			SetTimer(hwnd, 1, 100, NULL);
-			return 0;
-		case WM_TIMER:
-			iCount++;
-			if (iCount == 50) KillTimer(hwnd, 1);
-			InvalidateRect(hwnd, NULL, TRUE);
-			return 0;
-		case WM_PAINT:
-			hdc = BeginPaint(hwnd, &ps);
-			wsprintf(strCount, "%d", iCount);
-			TextOut(hdc, 10, 10, strCount, lstrlen(strCount));
-			EndPaint(hwnd, &ps);
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
+		HDC hdc;
+		PAINTSTRUCT ps;
+		RECT rctSize;
+		static int iCount1 = 0, iCount2 = 0;
+		static TCHAR strCount[64];
+
+		switch (msg) {
+			case WM_DESTROY:
+				PostQuitMessage(0);
+				return 0;
+			case WM_CREATE:
+				SetTimer(hwnd, TM_COUNT1, 100, NULL);
+				SetTimer(hwnd, TM_COUNT2, 500, NULL);
+				return 0;
+			case WM_TIMER:
+				switch (wp) {
+					case TM_COUNT1:
+						iCount1++;
+						break;
+					case TM_COUNT2:
+						iCount2++;
+						break;
+				}
+				InvalidateRect(hwnd, NULL, TRUE);
+				return 0;
+			case WM_PAINT:
+				hdc = BeginPaint(hwnd, &ps);
+
+				wsprintf(strCount, "TM_COUNT1 = %d\nTM_COUNT2 = %d",
+					iCount1, iCount2
+				);
+				GetClientRect(hwnd, &rctSize);
+				DrawText(hdc, strCount, -1, &rctSize, DT_LEFT);
+				EndPaint(hwnd, &ps);
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
