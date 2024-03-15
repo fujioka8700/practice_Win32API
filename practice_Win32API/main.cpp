@@ -1,37 +1,25 @@
 #include <windows.h>
 
-unsigned int lCount;
+VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
+	HDC hdc;
+	static int iCount = 0;
+	TCHAR strCount[64];
+
+	iCount++;
+
+	hdc = GetDC(hwnd);
+	wsprintf(strCount, "%d", iCount);
+	TextOut(hdc, 10, 10, strCount, lstrlen(strCount));
+	ReleaseDC(hwnd, hdc);
+}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-	HDC hdc;
-	PAINTSTRUCT ps;
-	RECT rctDimension;
-
-	static BOOL blRight = TRUE;
-	static int x = 0;
-
 	switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
 		case WM_CREATE:
-			SetTimer(hwnd, 1, 1, NULL);
-			return 0;
-		case WM_TIMER:
-			GetClientRect(hwnd, &rctDimension);
-			if (x + 100 >= rctDimension.right) blRight = FALSE;
-			else if (x <= 0) blRight = TRUE;
-
-			if (blRight) x++;
-			else x--;
-
-			InvalidateRect(hwnd, NULL, TRUE);
-			return 0;
-		case WM_PAINT:
-			hdc = BeginPaint(hwnd, &ps);
-			SelectObject(hdc, GetStockObject(BLACK_BRUSH));
-			Ellipse(hdc, x, 50, x + 100, 150);
-			EndPaint(hwnd, &ps);
+			SetTimer(hwnd, 1, 100, (TIMERPROC)TimerProc);
 			return 0;
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
